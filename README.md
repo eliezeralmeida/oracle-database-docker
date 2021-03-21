@@ -6,6 +6,20 @@ Para mais informações sobre o Oracle visite: [Oracle Database Online Documenta
 
 Para mais informações e detalhes sobre o assunto visite: [Docker Images on Github](https://github.com/oracle/docker-images)
 
+## Imagem Oracle 12.2.0.1 pronta para uso
+
+Abaixo é explicado todo o processo de criação e personalização da imagem oracle, porém se vc prefere uma imagem pronta para uso segue:
+
+A imagem compilada pode ser obtida em: [eliezeralmeidago/oracle-database](https://hub.docker.com/r/eliezeralmeidago/oracle-database)
+
+Primeiro precisamos fazer o pull da imagem (tamanho 6GB):
+
+    docker pull eliezeralmeidago/oracle-database:12.2-ee
+
+Depois executamos o ```docker run``` para subir o container:
+
+    docker run -p 1521:1521 -p 5500:5500 -e ORACLE_PWD=NzTQYrE$a8Fd eliezeralmeidago/oracle-database:12.2-ee
+
 ## Como fazer o build da imagem Oracle
 
 **IMPORTANTE:** é importante saber que o repositório não fornece o pacote de instalação do Oracle, para que o build funcione bem é preciso obter o pacote no site da Oracle, correspondente a versão atual desse tutorial.
@@ -27,11 +41,7 @@ _Considere como workspace a pasta que está o Dockerfile._
 
 Para criar uma imagem do Oracle Enterprise execute o seguinte script:
 
-    docker build --force-rm=true \
-    --no-cache=true \ 
-    --build-arg DB_EDITION=ee \
-    -t oracle/db:12.2-ee \
-    -f Dockerfile .
+    docker build --force-rm=true --no-cache=true --build-arg DB_EDITION=ee -t oracle/db:12.2-ee -f Dockerfile .
 
 * ```DB_EDITION=ee``` cria uma imagem do Oracle Enterprise
 * ```DB_EDITION=se2``` cria uma imagem do Oracle Standard Edition 2
@@ -40,24 +50,21 @@ Para criar uma imagem do Oracle Enterprise execute o seguinte script:
 
 Abaixo temos a descrição completa do comando ```docker run``` que podemos executar:
 
-    docker run --name <container name> \
-    -p <host port>:1521 -p <host port>:5500 \
-    -e ORACLE_SID=<nome do SID default: ORCLCDB> \
-    -e ORACLE_PDB=<nome do PDB default: ORCLPDB1> \
-    -e ORACLE_PWD=<senha dos usuários/schmemas> \
-    -e INIT_SGA_SIZE=<memória SGA em MB opcional> \
-    -e INIT_PGA_SIZE=<memória PGA em MB opcional> \
-    -e ORACLE_CHARACTERSET=<caracteres do banco default: AL32UTF8> \
-    -v [<volume no host>:]/opt/oracle/oradata \
-    oracle/db:12.2-ee
+    docker run --name <container name> 
+        -p <host port>:1521 
+        -p <host port>:5500
+        -e ORACLE_SID=<nome do SID default: ORCLCDB>
+        -e ORACLE_PDB=<nome do PDB default: ORCLPDB1>
+        -e ORACLE_PWD=<senha dos usuários/schmemas>
+        -e INIT_SGA_SIZE=<memória SGA em MB opcional>
+        -e INIT_PGA_SIZE=<memória PGA em MB opcional>
+        -e ORACLE_CHARACTERSET=<caracteres do banco default: AL32UTF8>
+        -v [<volume no host>:]/opt/oracle/oradata
+        oracle/db:12.2-ee
 
-Aqui temos um comando resumido e funcional:
+Aqui temos um comando pronto para ser executado:
 
-    docker run --name meu-oracle-12 \ 
-    -p 1521:1521 \ 
-    -p 5500:5500 \
-    -e ORACLE_PWD="NzTQYrE$a8Fd" \
-    oracle/db:12.2-ee
+    docker run --name meu-oracle-12 -p 1521:1521 -p 5500:5500 -e ORACLE_PWD=NzTQYrE$a8Fd oracle/db:12.2-ee
 
 Caso seja definida uma senha fraca o Oracle pode não aceita-la.
 
